@@ -159,7 +159,6 @@ Arguments BOUND, NOERROR, COUNT has the same meaning as `re-search-forward'."
                             (let ((re (concat "\\_<\\("
                                               (regexp-quote (car head))
                                               "\\)\\_>")))
-                              (print re)
                               (when (re-search-forward re (cdr bounds) t 1)
                                 (let ((col (current-column))
                                       (line (line-number-at-pos)))
@@ -168,7 +167,6 @@ Arguments BOUND, NOERROR, COUNT has the same meaning as `re-search-forward'."
                                               col))
                                   `(,line ,col error "Hydra key dublicate"))))))
                         heads))
-            (print dubs)
             (setq problems (nconc problems dubs)))))
       problems)))
 
