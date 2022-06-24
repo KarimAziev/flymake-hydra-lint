@@ -141,7 +141,8 @@ Arguments BOUND, NOERROR, COUNT has the same meaning as `re-search-forward'."
                     (bounds (when (listp sexp)
                               (bounds-of-thing-at-point 'sexp)))
                     (type (and (car sexp)
-                               (memq (car sexp) '(defhydra pretty-hydra-define))
+                               (memq (car sexp)
+                                     '(defhydra pretty-hydra-define))
                                (car sexp)))
                     (symb (and (when (symbolp (nth 1 sexp))
                                  (nth 1 sexp))))
@@ -150,24 +151,21 @@ Arguments BOUND, NOERROR, COUNT has the same meaning as `re-search-forward'."
             (setq heads (seq-drop heads 1)))
           (when (eq type 'pretty-hydra-define)
             (setq heads (apply 'append (seq-filter 'listp (car heads)))))
-          (let ((dubs))
-            (setq heads (flymake-hydra-lint-get-hydra-dubs
-                         (seq-filter 'listp heads)))
-            (setq dubs (mapcar
-                        (lambda (head)
-                          (save-excursion
-                            (let ((re (concat "\\_<\\("
-                                              (regexp-quote (car head))
-                                              "\\)\\_>")))
-                              (when (re-search-forward re (cdr bounds) t 1)
-                                (let ((col (current-column))
-                                      (line (line-number-at-pos)))
-                                  (setq col (if (>= col (length (car head)))
-                                                (- col (length (car head)))
-                                              col))
-                                  `(,line ,col error "Hydra key dublicate"))))))
-                        heads))
-            (setq problems (nconc problems dubs)))))
+          (setq heads (flymake-hydra-lint-get-hydra-dubs
+                       (seq-filter 'listp heads)))
+          (dolist (head heads)
+            (save-excursion
+              (let ((re (concat "\\_<\\("
+                                (regexp-quote (car head))
+                                "\\)\\_>")))
+                (while (re-search-forward re (cdr bounds) t 1)
+                  (let ((col (current-column))
+                        (line (line-number-at-pos)))
+                    (setq col (if (>= col (length (car head)))
+                                  (- col (length (car head)))
+                                col))
+                    (push `(,line ,col error "Hydra key dublicate")
+                          problems))))))))
       problems)))
 
 (defun flymake-hydra-lint-keys (report-fn &rest _args)
