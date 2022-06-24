@@ -1,0 +1,33 @@
+* flymake-hydra-lint
+
+A flymake backend to check dublicated keys in hydras.
+
+** Installation
+
+*** Manually
+
+Download repository and it to your load path in your init file:
+
+#+begin_src elisp :eval no
+
+(add-to-list 'load-path "/path/to/flymake-hydra-lint/")
+
+(require 'flymake-hydra-lint)
+(add-hook 'emacs-lisp-mode-hook #'flymake-hydra-lint)
+#+end_src
+
+*** With use-package and straight
+
+#+begin_src elisp :eval no
+
+(use-package flymake-hydra-lint
+  :straight (:repo "KarimAziev/flymake-hydra-lint" :type git :host github)
+  :commands (flymake-hydra-lint)
+  :hook (emacs-lisp-mode . flymake-hydra-lint))
+
+#+end_src
+
+** Commands
+
++ ~flymake-hydra-lint~
+Add hydra linters to ~flymake-diagnostic-functions~ and run flymake.
