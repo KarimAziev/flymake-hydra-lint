@@ -150,9 +150,9 @@ Arguments BOUND, NOERROR, COUNT has the same meaning as `re-search-forward'."
           (when (stringp (car heads))
             (setq heads (seq-drop heads 1)))
           (when (eq type 'pretty-hydra-define)
-            (setq heads (apply 'append (seq-filter 'listp (car heads)))))
+            (setq heads (apply #'append (seq-filter #'listp (car heads)))))
           (setq heads (flymake-hydra-lint-get-hydra-dubs
-                       (seq-filter 'listp heads)))
+                       (seq-filter #'listp heads)))
           (dolist (head heads)
             (save-excursion
               (let ((re (concat "\\_<\\("
