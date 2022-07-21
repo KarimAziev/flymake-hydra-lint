@@ -131,7 +131,8 @@ Arguments BOUND, NOERROR, COUNT has the same meaning as `re-search-forward'."
   "Check current buffer for dublicate keys in hydras and return list of links."
   (save-excursion
     (goto-char (point-max))
-    (let ((problems))
+    (let ((problems)
+          (case-fold-search nil))
       (while (flymake-hydra-lint-re-search-backward
               "\\_<\\(defhydra\\|pretty-hydra-define\\)\\_>"
               nil t 1)
@@ -157,7 +158,8 @@ Arguments BOUND, NOERROR, COUNT has the same meaning as `re-search-forward'."
             (save-excursion
               (let ((re (concat "\\_<\\("
                                 (regexp-quote (car head))
-                                "\\)\\_>")))
+                                "\\)\\_>"))
+                    (case-fold-search nil))
                 (while (re-search-forward re (cdr bounds) t 1)
                   (let ((col (current-column))
                         (line (line-number-at-pos)))
